@@ -29,7 +29,7 @@ public class ViewInventory extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		Inventory inventory = new Inventory(UtilDB.listInventory("Item"));
+		Inventory inventory = new Inventory(UtilDB.listInventory());
 		response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         String title = "Inventory";

@@ -17,12 +17,15 @@ public class Inventory {
 	}
 	
 	// TODO replace 'object' with item class
-	public void removeItem(String item) {
-		Item thing = searchForItem(item);
+	public Item removeItem(String item) {
+		Item thing = null; 
+		thing = searchForItem(item);
 		if(thing != null ) {
 			// TODO delete from database
+			UtilDB.deleteItem(thing);
 			inventory.remove(thing);
 		}
+		return thing;
 	}
 	
 	public int getQuantity(String item)
@@ -84,7 +87,7 @@ public class Inventory {
 	private Item searchForItem(String item)
 	{
 		for(Item thing: inventory) {
-			if(thing.getName() == item)
+			if(item.equals(thing.getName()))
 			{
 				return thing;
 			}
@@ -94,9 +97,6 @@ public class Inventory {
 	
 	public Item updateItem(String name, String newName, int newCost, int newQuantity, String newStorage) {
 		Item item = searchForItem(name);
-		if (newName != null) {
-			item.setName(name);
-		}
 		if (newCost != -1) {
 			item.setCost(newCost);
 		}
@@ -105,6 +105,9 @@ public class Inventory {
 		}
 		if (newStorage != null) {
 			item.setStorage(newStorage);
+		}
+		if (newName != null) {
+			item.setName(name);
 		}
 		UtilDB.updateItem(item);
 		return item;

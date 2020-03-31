@@ -114,4 +114,20 @@ public class UtilDB {
 		   session.close();
 	   }
    }
+   
+   public static void deleteItem(Item item) {
+	   Session session = getSessionFactory().openSession();
+	   Transaction tx = null;
+	   try {
+		   tx = session.beginTransaction();
+		   session.delete(item);
+		   tx.commit();
+	   } catch (HibernateException e) {
+		   if (tx != null)
+			   tx.rollback();
+		   e.printStackTrace();
+	   } finally {
+		   session.close();
+	   }
+   }
 }

@@ -10,38 +10,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class AddNewItem
+ * Servlet implementation class RemoveFromInventory
  */
-@WebServlet("/AddNewItem")
-public class AddInventory extends HttpServlet {
+@WebServlet("/RemoveFromInventory")
+public class RemoveFromInventory extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddInventory() {
+    public RemoveFromInventory() {
         super();
         // TODO Auto-generated constructor stub
     }
+    
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Uncomment and remove last line
-		/*String name = request.getParameter("name");
-		int cost = Integer.valueOf(request.getParameter("cost"));
-		int quantity = Integer.valueOf(request.getParameter("quantity"));
-		String storage = request.getParameter("storage");
-        addItem(name, cost, quantity, storage, response);*/
-		addItem("milk", 1, 1, "fridge", response);
+		// TODO Auto-generated method stub
+		//add lines for getting name from HTML form
+		remove("milk", response);
 	}
 	
-	void addItem(String name, int cost, int quantity, String storage, HttpServletResponse response) throws IOException {
-		Item item = UtilDB.createItem(name, cost, quantity, storage);
-		response.setContentType("text/html");
+    private void remove(String name, HttpServletResponse response) throws IOException {
+    	Inventory inventory = new Inventory(UtilDB.listInventory());
+    	Item item = inventory.removeItem(name);
+    	response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        String title = "Item Added";
+        String title = "Item Removed";
         String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + //
               "transitional//en\">\n"; //
         out.println(docType + //
@@ -69,18 +67,19 @@ public class AddInventory extends HttpServlet {
               		"<th>Quantity</th>\n" + 
               		"<th>Storage Type</th>\n" +
               		"<th>Cost</th>\n" +
-              		"</tr>" +
-              		"<tr>\r\n" + 
+              		"</tr>");
+        if(item != null) {
+        	out.println("<tr>\r\n" + 
          	 		"    <td>"+ item.getName() + "</td>\n" + 
          	 		"    <td>"+ item.getQuantity() + "</td>\n" + 
          	 		"    <td>" + item.getStorage() + "</td>\n" + 
          	 		"    <td>" + item.getCost() + "</td>\n" +
          	 		"  </tr>");
-        			
+        }
         out.println("</table>");
         out.println("<a href="); //TODO: update link
         out.println("</body></html>");
-	}
+    }
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

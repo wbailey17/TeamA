@@ -28,17 +28,18 @@ public class UpdateInventoryItem extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String itemName = request.getParameter("itenName");
+		// TODO Uncomment and remove last line 
+		/*String itemName = request.getParameter("itenName");
 		String newName = request.getParameter("newName");
 		int cost = Integer.valueOf(request.getParameter("cost"));
 		int quantity = Integer.valueOf(request.getParameter("quantity"));
 		String storage = request.getParameter("storage");
-        updateItem(itemName, newName, cost, quantity, storage, response);
+        updateItem(itemName, newName, cost, quantity, storage, response);*/
+		updateItem("milk", "Milk", -1, 2, null, response);
 	}
 	
 	void updateItem(String itemName, String newName, int cost, int quantity, String storage, HttpServletResponse response) throws IOException {
-		Inventory inventory = new Inventory(UtilDB.listInventory("user"));
+		Inventory inventory = new Inventory(UtilDB.listInventory());
 		Item item = inventory.updateItem(itemName, newName, cost, quantity, storage);
 		response.setContentType("text/html");
         PrintWriter out = response.getWriter();

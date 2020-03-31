@@ -29,9 +29,10 @@ public class InventorySearch extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String keyword = request.getParameter("item");
-        search(keyword, response);
+		//String keyword = request.getParameter("item");
+		//search(keyword, response);
+		//TODO remove line after once HTML is done
+        search("milk", response);
 	}
 
 	void search(String keyword, HttpServletResponse response) throws IOException {
