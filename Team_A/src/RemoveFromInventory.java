@@ -77,7 +77,7 @@ public class RemoveFromInventory extends HttpServlet {
          	 		"  </tr>");
         }
         out.println("</table>");
-        out.println("<a href="); //TODO: update link
+        out.println("<a href=\\Team_A\\Home_Page.html>Home</a> <br>"); //TODO: update link
         out.println("</body></html>");
     }
 
