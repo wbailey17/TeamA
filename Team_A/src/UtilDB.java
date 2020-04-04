@@ -130,4 +130,28 @@ public class UtilDB {
 		   session.close();
 	   }
    }
+   
+   public static void test() {
+	   Session session = getSessionFactory().openSession();
+	   Transaction tx = null;
+	   
+	   try {
+		   tx = session.beginTransaction();
+		   
+		   User test = new User("Cody");
+		   Cart i = new Cart("Test Inventory");
+		   test.getInventories().add(i);
+		   session.save(test);
+		   i.setUser(test);
+		   session.save(i);
+		   tx.commit();
+	   } catch (HibernateException e) {
+		   if (tx != null)
+			   tx.rollback();
+		   e.printStackTrace();
+	   } finally {
+		   session.close();
+	   }
+	   
+   }
 }
