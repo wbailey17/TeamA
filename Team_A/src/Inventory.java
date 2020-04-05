@@ -1,13 +1,36 @@
 import java.util.List;
+import javax.persistence.*;
 
+@Entity
 public class Inventory {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "inventory_id")
+	private Integer inventory_id;
 	
+	@Column(name = "name")
+	private String name;
+	
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable=false)
+    private User user;
 	// TODO replace 'object' with item class
+    
+    @OneToMany()
+    @JoinColumn(name="inventory_id")
 	private List<Item> inventory;
 	
 	public Inventory(List<Item> inventory)
 	{
 		this.inventory = inventory;
+	}
+	
+	public Inventory(String name) {
+		this.name = name;
+	}
+	
+	public Inventory() {
+		super();
 	}
 
 	// TODO replace 'object' with item class
@@ -118,4 +141,16 @@ public class Inventory {
 		return inventory;
 	}
 	
+	
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public String toString() {
+		return this.name;
+	}
 }

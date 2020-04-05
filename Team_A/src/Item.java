@@ -1,9 +1,5 @@
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.*;
 
 @Entity
 public class Item {
@@ -24,6 +20,10 @@ public class Item {
 	
 	@Column(name = "storage")
 	private String storage;
+	
+	@ManyToOne
+	@JoinColumn(name="inventory_id", nullable=false)
+	private Inventory inventory;
 	
 	public Item(Integer id, String name, int cost, int quantity, String storage) {
 		this.id = id;
