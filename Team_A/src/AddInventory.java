@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class AddNewItem
  */
-@WebServlet("/AddNewItem")
+@WebServlet("/AddInventory")
 public class AddInventory extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -29,12 +29,12 @@ public class AddInventory extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Uncomment and remove last line
-		/*String name = request.getParameter("name");
+		String name = request.getParameter("name");
 		int cost = Integer.valueOf(request.getParameter("cost"));
 		int quantity = Integer.valueOf(request.getParameter("quantity"));
 		String storage = request.getParameter("storage");
-        addItem(name, cost, quantity, storage, response);*/
-		addItem("milk", 1, 1, "fridge", response);
+        addItem(name, cost, quantity, storage, response);
+		//addItem("milk", 1, 1, "fridge", response);
 	}
 	
 	void addItem(String name, int cost, int quantity, String storage, HttpServletResponse response) throws IOException {

@@ -30,8 +30,10 @@ public class RemoveFromInventory extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		String item = request.getParameter("item");
+		remove(item, response);
 		//add lines for getting name from HTML form
-		remove("milk", response);
+		//remove("milk", response);
 	}
 	
     private void remove(String name, HttpServletResponse response) throws IOException {

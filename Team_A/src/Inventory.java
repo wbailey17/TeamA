@@ -97,20 +97,23 @@ public class Inventory {
 	
 	public Item updateItem(String name, String newName, int newCost, int newQuantity, String newStorage) {
 		Item item = searchForItem(name);
-		if (newCost != -1) {
-			item.setCost(newCost);
+		if (item != null) {
+			if (newCost != -1) {
+				item.setCost(newCost);
+			}
+			if (newQuantity != -1) {
+				item.setQuantity(newQuantity);
+			}
+			if (!newStorage.equals("")) {
+				item.setStorage(newStorage);
+			}
+			if (!newName.equals("")) {
+				item.setName(newName);
+			}
+			UtilDB.updateItem(item);
+			return item;
 		}
-		if (newQuantity != -1) {
-			item.setQuantity(newQuantity);
-		}
-		if (newStorage != null) {
-			item.setStorage(newStorage);
-		}
-		if (newName != null) {
-			item.setName(name);
-		}
-		UtilDB.updateItem(item);
-		return item;
+		return new Item();
 	}
 	
 	public List<Item> returnInventory()

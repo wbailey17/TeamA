@@ -28,14 +28,26 @@ public class UpdateInventoryItem extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Uncomment and remove last line 
-		/*String itemName = request.getParameter("itenName");
+		// TODO Uncomment and remove last line
+		int cost;
+		int quantity;
+		String itemName = request.getParameter("itemName");
 		String newName = request.getParameter("newName");
-		int cost = Integer.valueOf(request.getParameter("cost"));
-		int quantity = Integer.valueOf(request.getParameter("quantity"));
+		if(request.getParameter("cost").equals("") == false) {
+			cost = Integer.valueOf(request.getParameter("cost"));
+		}
+		else {
+			cost = -1;
+		}
+		if(request.getParameter("quantity").equals("") == false) {
+			quantity = Integer.valueOf(request.getParameter("quantity"));
+		}
+		else {
+			quantity = -1;
+		}
 		String storage = request.getParameter("storage");
-        updateItem(itemName, newName, cost, quantity, storage, response);*/
-		updateItem("milk", "Milk", -1, 2, null, response);
+        updateItem(itemName, newName, cost, quantity, storage, response);
+		//updateItem("milk", "Milk", -1, 2, null, response);
 	}
 	
 	void updateItem(String itemName, String newName, int cost, int quantity, String storage, HttpServletResponse response) throws IOException {

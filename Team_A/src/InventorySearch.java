@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class SearchForItem
  */
-@WebServlet("/SearchForItem")
+@WebServlet("/InventorySearch")
 public class InventorySearch extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -29,10 +29,10 @@ public class InventorySearch extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//String keyword = request.getParameter("item");
-		//search(keyword, response);
+		String keyword = request.getParameter("item");
+		search(keyword, response);
 		//TODO remove line after once HTML is done
-        search("milk", response);
+        //search("milk", response);
 	}
 
 	void search(String keyword, HttpServletResponse response) throws IOException {
