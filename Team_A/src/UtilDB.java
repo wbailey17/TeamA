@@ -329,11 +329,14 @@ public class UtilDB {
 	   Transaction tx = null;
 	   User user = new User(username);
 	   Inventory in = new Inventory("inventory");
+	   Budget b =  new Budget("Budget 1", 1000.0);
 	   in.setUser(user);
+	   b.setUser(user);
 	   try {
 		   tx = session.beginTransaction();
 		   session.save(user);
 		   session.save(in);
+		   session.save(b);
 		   tx.commit();
 	   } catch (HibernateException e) {
 		   if (tx != null)
@@ -378,5 +381,74 @@ public class UtilDB {
 		   session.close();
 	   }
 	   
+   }
+   
+   public static Budget getBudget(User user) {
+	   Session session = getSessionFactory().openSession();
+	   Transaction tx = null;
+	   Budget budget = null;
+	   try {
+		   tx = session.beginTransaction();
+		   String tsql = "SELECT * FROM Budget WHERE user_id = :id";
+		   SQLQuery q = session.createSQLQuery(tsql);
+		   q.addEntity(Budget.class);
+		   q.setParameter("id", user.getId());
+		   budget = (Budget) q.list().get(0);
+		   tx.commit();
+	   } catch (HibernateException e) {
+		   if (tx != null)
+			   tx.rollback();
+		   e.printStackTrace();
+	   } finally {
+		   session.close();
+	   }
+	   return budget;
+   }
+   
+   public static List<Expense> getExpenses(Budget budget){
+	   Session session = getSessionFactory().openSession();
+	   Transaction tx = null;
+	   List<Expense> expenses = new ArrayList<>();
+	   try {
+		   tx = session.beginTransaction();
+		   String tsql = "SELECT * FROM Expense WHERE budget_id = :id";
+		   SQLQuery q = session.createSQLQuery(tsql);
+		   q.addEntity(Expense.class);
+		   q.setParameter("id", budget.getID());
+		   expenses = q.list();
+		   
+		   tx.commit();
+	   } catch (HibernateException e) {
+		   if (tx != null)
+			   tx.rollback();
+		   e.printStackTrace();
+	   } finally {
+		   session.close();
+	   }
+	   return expenses;
+   }
+   
+   public static void addExpense(Budget budget, Expense expense) {
+	   Session session = getSessionFactory().openSession();
+	   Transaction tx = null;
+	   try {
+		   tx = session.beginTransaction();
+		   String tsql = "SELECT * FROM Budget WHERE id =:id";
+		   SQLQuery q = session.createSQLQuery(tsql);
+		   q.addEntity(Budget.class);
+		   q.setParameter("id", budget.getID());
+		   Budget b = (Budget) q.list().get(0);
+		   b.addExpense(expense);
+		   expense.setBudget(b);
+		   session.save(b);
+		   session.save(expense);
+		   tx.commit();
+	   } catch (HibernateException e) {
+		   if (tx != null)
+			   tx.rollback();
+		   e.printStackTrace();
+	   } finally {
+		   session.close();
+	   }
    }
 }
