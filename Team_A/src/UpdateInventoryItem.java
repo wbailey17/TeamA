@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class UpdateInventoryItem
@@ -31,6 +32,8 @@ public class UpdateInventoryItem extends HttpServlet {
 		// TODO Uncomment and remove last line
 		int cost;
 		int quantity;
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
 		String itemName = request.getParameter("itemName");
 		String newName = request.getParameter("newName");
 		if(request.getParameter("cost").equals("") == false) {
@@ -46,16 +49,17 @@ public class UpdateInventoryItem extends HttpServlet {
 			quantity = -1;
 		}
 		String storage = request.getParameter("storage");
-        updateItem(itemName, newName, cost, quantity, storage, response);
-		//updateItem("milk", "Milk", -1, 2, null, response);
+        updateItem(user, itemName, newName, cost, quantity, storage, response);
 	}
 	
-	void updateItem(String itemName, String newName, int cost, int quantity, String storage, HttpServletResponse response) throws IOException {
-		Inventory inventory = new Inventory(UtilDB.listInventory());
-		Item item = inventory.updateItem(itemName, newName, cost, quantity, storage);
+	void updateItem(User user, String itemName, String newName, int cost, int quantity, String storage, HttpServletResponse response) throws IOException {
+		//Inventory inventory = new Inventory(UtilDB.listInventory());
+		//Item item = inventory.updateItem(itemName, newName, cost, quantity, storage);
+		//Item item = user.getInventories().get(0).updateItem(itemName, newName, cost, quantity, storage);
+		Item item = UtilDB.updateItem(user, itemName, newName, cost, quantity, storage);
 		response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        String title = "Item Updated";
+		PrintWriter out = response.getWriter();
+		String title = "Item Updated";
         String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + //
               "transitional//en\">\n"; //
         out.println(docType + //

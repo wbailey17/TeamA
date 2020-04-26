@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class AddNewItem
@@ -29,16 +30,19 @@ public class AddInventory extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Uncomment and remove last line
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
 		String name = request.getParameter("name");
 		int cost = Integer.valueOf(request.getParameter("cost"));
 		int quantity = Integer.valueOf(request.getParameter("quantity"));
 		String storage = request.getParameter("storage");
-        addItem(name, cost, quantity, storage, response);
+        addItem(user, name, cost, quantity, storage, response);
 		//addItem("milk", 1, 1, "fridge", response);
 	}
 	
-	void addItem(String name, int cost, int quantity, String storage, HttpServletResponse response) throws IOException {
-		Item item = UtilDB.createItem(name, cost, quantity, storage);
+	void addItem(User user, String name, int cost, int quantity, String storage, HttpServletResponse response) throws IOException {
+		Item item = new Item(name, cost, quantity, storage);
+		//Item item = UtilDB.createItem(name, cost, quantity, storage);
 		response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         String title = "Item Added";
@@ -62,8 +66,12 @@ public class AddInventory extends HttpServlet {
               "	<h1>" + title + "</h1>\n" + 
               "</header>"
               + "<title>" + title + "</title></head><br>\n" + //
-              "<body>\n" + //
-              "<table style=\"width:100%\">\n" + 
+        		"<body>\n" );
+		if(UtilDB.addItem(user, item)) {
+			out.println("<h2>Item Already Exists<h2>");
+		}
+		else {
+			out.println("<table style=\"width:100%\">\n" +
               		"<tr style=\"background-color: #f0f0f0\">\n" + 
               		"<th>Item</th>\n" + 
               		"<th>Quantity</th>\n" + 
@@ -75,9 +83,9 @@ public class AddInventory extends HttpServlet {
          	 		"    <td>"+ item.getQuantity() + "</td>\n" + 
          	 		"    <td>" + item.getStorage() + "</td>\n" + 
          	 		"    <td>" + item.getCost() + "</td>\n" +
-         	 		"  </tr>");
-        			
-        out.println("</table>");
+         	 		"  </tr>");			
+			out.println("</table>");
+		}
         out.println("<a href=\\Team_A\\Home_Page.html>Home</a> <br>"); 
         out.println("</body></html>");
 	}

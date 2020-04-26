@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class RemoveFromInventory
@@ -30,15 +31,18 @@ public class RemoveFromInventory extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
 		String item = request.getParameter("item");
-		remove(item, response);
+		remove(user, item, response);
 		//add lines for getting name from HTML form
 		//remove("milk", response);
 	}
 	
-    private void remove(String name, HttpServletResponse response) throws IOException {
-    	Inventory inventory = new Inventory(UtilDB.listInventory());
-    	Item item = inventory.removeItem(name);
+    private void remove(User user, String name, HttpServletResponse response) throws IOException {
+    	Item item = UtilDB.deleteItem(user, name);
+    	//Inventory inventory = new Inventory(UtilDB.listInventory());
+    	//Item item = inventory.removeItem(name);
     	response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         String title = "Item Removed";

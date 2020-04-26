@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class SearchForItem
@@ -30,13 +31,17 @@ public class InventorySearch extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("item");
-		search(keyword, response);
+		HttpSession session = request.getSession();
+		search(keyword, response, session);
 		//TODO remove line after once HTML is done
         //search("milk", response);
 	}
 
-	void search(String keyword, HttpServletResponse response) throws IOException {
-		List<Item> items = UtilDB.listInventory(keyword);
+	void search(String keyword, HttpServletResponse response, HttpSession session) throws IOException {
+		User user = (User) session.getAttribute("user");
+		//Inventory inventory = user.getInventories().get(0);
+		//Inventory inventory = new Inventory(); //replace with user's inventory once user is setup.
+		List<Item> resultList = UtilDB.searchInventory(user, keyword);
 		response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         String title = "Inventory";
@@ -69,7 +74,7 @@ public class InventorySearch extends HttpServlet {
               		"<th>Cost</th>\n" +
               		"</tr>");
         //TODO: change object to item
-        for(Item item: items) {
+        for(Item item: resultList) {
         	 out.println("<tr>\r\n" + 
          	 		"    <td>"+ item.getName() + "</td>\n" + 
          	 		"    <td>"+ item.getQuantity() + "</td>\n" + 

@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class ViewInventory
@@ -29,7 +30,9 @@ public class ViewInventory extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		Inventory inventory = new Inventory(UtilDB.listInventory());
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		//Inventory inventory = new Inventory(UtilDB.listInventory());
 		response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         String title = "Inventory";
@@ -62,14 +65,16 @@ public class ViewInventory extends HttpServlet {
               		"<th>Cost</th>\n" +
               		"</tr>");
         //TODO: change object to item
-        for(Item item: inventory.returnInventory()) {
-        	 out.println("<tr>\r\n" + 
-         	 		"    <td>"+ item.getName() + "</td>\n" + 
-         	 		"    <td>"+ item.getQuantity() + "</td>\n" + 
+        if(!UtilDB.getInventory(user).isEmpty()) {
+        	for(Item item: UtilDB.getInventory(user)) {
+        		out.println("<tr>\r\n" + 
+        			"    <td>"+ item.getName() + "</td>\n" + 
+        			"    <td>"+ item.getQuantity() + "</td>\n" + 
          	 		"    <td>" + item.getStorage() + "</td>\n" + 
          	 		"    <td>" + item.getCost() + "</td>\n" +
          	 		"  </tr>");
            }
+        }
         out.println("</table>");
         out.println("<a href=\\Team_A\\Home_Page.html>Home</a> <br>");
         out.println("</body></html>");

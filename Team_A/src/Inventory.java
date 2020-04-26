@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -42,10 +43,10 @@ public class Inventory {
 	// TODO replace 'object' with item class
 	public Item removeItem(String item) {
 		Item thing = null; 
-		thing = searchForItem(item);
+		thing = searchForExactItem(item);
 		if(thing != null ) {
 			// TODO delete from database
-			UtilDB.deleteItem(thing);
+			//UtilDB.deleteItem(thing);
 			inventory.remove(thing);
 		}
 		return thing;
@@ -53,7 +54,7 @@ public class Inventory {
 	
 	public int getQuantity(String item)
 	{
-		Item thing = searchForItem(item);
+		Item thing = searchForExactItem(item);
 		int quantity = -1;
 		if(thing != null){
 			quantity = thing.getQuantity();
@@ -63,7 +64,7 @@ public class Inventory {
 	
 	public void setQuantity(String item, int amount)
 	{
-		Item thing = searchForItem(item);
+		Item thing = searchForExactItem(item);
 		if(thing != null) {
 			// TODO update database
 			thing.setQuantity(amount);
@@ -72,7 +73,7 @@ public class Inventory {
 	
 	public void setStorageType(String item, String storage)
 	{
-		Item thing = searchForItem(item);
+		Item thing = searchForExactItem(item);
 		if(thing != null) {
 			thing.setStorage(storage);
 		}
@@ -80,7 +81,7 @@ public class Inventory {
 	
 	public String getStorageType(String item)
 	{
-		Item thing = searchForItem(item);
+		Item thing = searchForExactItem(item);
 		String storage = null;
 		if(thing != null) {
 			storage = thing.getStorage();
@@ -90,7 +91,7 @@ public class Inventory {
 	
 	public void setCost(String item, int cost)
 	{
-		Item thing = searchForItem(item);
+		Item thing = searchForExactItem(item);
 		if(thing != null) {
 			thing.setCost(cost);
 		}
@@ -98,7 +99,7 @@ public class Inventory {
 	
 	public int getCost(String item)
 	{
-		Item thing = searchForItem(item);
+		Item thing = searchForExactItem(item);
 		int cost = -1;
 		if(thing != null) {
 			cost = thing.getCost();
@@ -107,10 +108,10 @@ public class Inventory {
 	}
 	
 	// TODO replace 'object'
-	private Item searchForItem(String item)
+	private Item searchForExactItem(String item)
 	{
 		for(Item thing: inventory) {
-			if(item.equals(thing.getName()))
+			if(item.equalsIgnoreCase(thing.getName()))
 			{
 				return thing;
 			}
@@ -118,8 +119,18 @@ public class Inventory {
 		return null;
 	}
 	
+	public List<Item> itemsStartingWith(String keyword){
+		List<Item> resultList = new ArrayList<Item>();
+		for (Item item: inventory) {
+			if (item.getName().startsWith(keyword)) {
+	               resultList.add(item);
+	            }
+		}
+		return resultList;
+	}
+	
 	public Item updateItem(String name, String newName, int newCost, int newQuantity, String newStorage) {
-		Item item = searchForItem(name);
+		Item item = searchForExactItem(name);
 		if (item != null) {
 			if (newCost != -1) {
 				item.setCost(newCost);
@@ -133,7 +144,7 @@ public class Inventory {
 			if (!newName.equals("")) {
 				item.setName(newName);
 			}
-			UtilDB.updateItem(item);
+			//UtilDB.updateItem(item);
 			return item;
 		}
 		return new Item();
@@ -155,5 +166,8 @@ public class Inventory {
 	
 	public String toString() {
 		return this.name;
+	}
+	public int getId() {
+		return this.inventory_id;
 	}
 }

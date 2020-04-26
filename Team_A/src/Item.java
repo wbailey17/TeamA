@@ -82,5 +82,7 @@ public class Item {
 	public void setStorage(String storage) {
 		this.storage = storage;
 	}
-	
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
+	}
 }

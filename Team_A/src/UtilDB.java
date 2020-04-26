@@ -133,6 +133,217 @@ public class UtilDB {
 	   }
    }
    
+   public static void save(User user) {
+	   Session session = getSessionFactory().openSession();
+	   Transaction tx = null;
+	   try {
+		   tx = session.beginTransaction();
+		   session.update(user);
+		   tx.commit();
+	   } catch (HibernateException e) {
+		   if (tx != null)
+			   tx.rollback();
+		   e.printStackTrace();
+	   } finally {
+		   session.close();
+	   }
+   }
+   
+   public static User getUser(String username) {
+	   Session session = getSessionFactory().openSession();
+	   Transaction tx = null;
+	   User user = null;
+	   try {
+		   tx = session.beginTransaction();
+		   String sql = "SELECT * FROM User WHERE username = :user"; // prepared statement to get a specific user example
+		   SQLQuery query = session.createSQLQuery(sql); // creates the actual query
+		   query.addEntity(User.class); // maps to User Entity
+		   query.setParameter("user", username);  
+		   List users = query.list();
+		   if(!users.isEmpty()) {
+			   user = (User) users.get(0);
+			   user.getInventories();
+			   String tsql = "SELECT * FROM Inventory WHERE user_id = :id";
+			   SQLQuery q = session.createSQLQuery(tsql);
+			   q.addEntity(Inventory.class);
+			   q.setParameter("id", user.getId());
+			   List temp = q.list();
+			   user.setInventories(temp);
+		   }
+
+		   
+	   } catch (HibernateException e) {
+		   if (tx != null)
+			   tx.rollback();
+		   e.printStackTrace();
+	   } finally {
+		   session.close();
+	   }
+	   return user;
+   }
+   
+   public static Item updateItem(User user, String name, String newName, int cost, int number, String storage) {
+	   Session session = getSessionFactory().openSession();
+	   List<Item> temp = new ArrayList<>();
+	   Item item = null;
+	   Transaction tx = null;
+	   try {
+		   tx = session.beginTransaction();
+		   /*String tsql = "SELECT * FROM Item WHERE inventory_id = :id";
+		   SQLQuery q = session.createSQLQuery(tsql);
+		   q.addEntity(Item.class);
+		   q.setParameter("id", user.getInventories().get(0).getId());
+		   List<?> inventory = q.list();
+	       for (Iterator<?> iterator = inventory.iterator(); iterator.hasNext();) {
+	            Item x = (Item) iterator.next();
+	            temp.add(x);
+	       }*/
+		   session.saveOrUpdate(user.getInventories().get(0));
+	  	   for(Item thing: user.getInventories().get(0).returnInventory()) {
+				if(name.equalsIgnoreCase(thing.getName()))
+				{
+					item = thing;
+				}
+			}
+	  	   if(item != null) {
+	  		 if (cost != -1) {
+					item.setCost(cost);
+				}
+				if (number != -1) {
+					item.setQuantity(number);
+				}
+				if (!storage.equals("")) {
+					item.setStorage(storage);
+				}
+				if (!newName.equals("")) {
+					item.setName(newName);
+				}
+			  	session.saveOrUpdate(item);
+	  	   }
+		   tx.commit();
+	   } catch (HibernateException e) {
+		   if (tx != null)
+			   tx.rollback();
+		   e.printStackTrace();
+	   } finally {
+		   session.close();
+	   }
+
+	   return item;
+   }
+   
+   public static List<Item> getInventory(User user) {
+	   Session session = getSessionFactory().openSession();
+	   Transaction tx = null;
+	   List<Item> temp = new ArrayList<>();
+	   try {
+		   tx = session.beginTransaction();
+		   //String tsql = "SELECT * FROM Item WHERE inventory_id = :id";
+		   //SQLQuery q = session.createSQLQuery(tsql);
+		   //q.addEntity(Item.class);
+		   //q.setParameter("id", user.getInventories().get(0).getId());
+		   //List<?> inventory = q.list();
+		   session.saveOrUpdate(user.getInventories().get(0));
+	       for (Item x: user.getInventories().get(0).returnInventory()) {
+	            Item item = x;
+	            temp.add(item);
+	       }
+		   tx.commit();
+	   } catch (HibernateException e) {
+		   if (tx != null)
+			   tx.rollback();
+		   e.printStackTrace();
+	   } finally {
+		   session.close();
+	   }
+	   return temp;
+   }
+   
+   public static List<Item> searchInventory(User user, String keyword) {
+	   List<Item> inventory = getInventory(user);
+	   List<Item> matching = new ArrayList<>();
+	   for(Item item: inventory) {
+		   if(item.getName().toLowerCase().contains(keyword.toLowerCase())) {
+			   matching.add(item);
+		   }
+	   }
+	   return matching;
+   }
+   
+   public static Item deleteItem(User user, String name) {
+	   Session session = getSessionFactory().openSession();
+	   Item item = null;
+	   Transaction tx = null;
+	   try {
+		   tx = session.beginTransaction();
+		   session.saveOrUpdate(user.getInventories().get(0));
+		   item = user.getInventories().get(0).removeItem(name);
+		   String tsql = "DELETE FROM Item WHERE inventory_id = :id and name = :name";
+		   SQLQuery q = session.createSQLQuery(tsql);
+		   q.addEntity(Item.class);
+		   q.setParameter("id", user.getInventories().get(0).getId());
+		   q.setParameter("name", item.getName());
+		   q.executeUpdate();
+		   tx.commit();
+	   } catch (HibernateException e) {
+		   if (tx != null)
+			   tx.rollback();
+		   e.printStackTrace();
+	   } finally {
+		   session.close();
+	   }
+	   return item;
+   }
+   
+   public static boolean addItem(User user, Item item) {
+	   Session session = getSessionFactory().openSession();
+	   boolean exist = false;
+	   Transaction tx = null;
+	   try {
+		   tx = session.beginTransaction();
+		   session.saveOrUpdate(user.getInventories().get(0));
+		   for(Item x : user.getInventories().get(0).returnInventory()) {
+			   if(item.getName().equalsIgnoreCase(x.getName())) {
+				   exist = true;
+			   }
+		   }
+		   if(!exist) {
+			   item.setInventory(user.getInventories().get(0));
+			   user.getInventories().get(0).addToInventory(item);
+			   session.saveOrUpdate(item);
+		   }
+		   session.saveOrUpdate(user.getInventories().get(0));
+		   tx.commit();
+	   } catch (HibernateException e) {
+		   if (tx != null)
+			   tx.rollback();
+		   e.printStackTrace();
+	   } finally {
+		   session.close();
+	   }
+	   return exist;
+   }
+   
+   public static void newUser(String username) {
+	   Session session = getSessionFactory().openSession();
+	   Transaction tx = null;
+	   User user = new User(username);
+	   Inventory in = new Inventory("inventory");
+	   in.setUser(user);
+	   try {
+		   tx = session.beginTransaction();
+		   session.save(user);
+		   session.save(in);
+		   tx.commit();
+	   } catch (HibernateException e) {
+		   if (tx != null)
+			   tx.rollback();
+		   e.printStackTrace();
+	   } finally {
+		   session.close();
+	   }
+   }
+   
    public static void test() {
 	   Session session = getSessionFactory().openSession();
 	   Transaction tx = null;
