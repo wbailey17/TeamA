@@ -32,6 +32,7 @@ public class UserLogin extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
 		String username = request.getParameter("name");
+		System.out.print(username);
 		User user = UtilDB.getUser(username);
 		if(user != null) {
 			session.setAttribute("user", user);

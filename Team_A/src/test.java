@@ -29,7 +29,7 @@ public class test extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		UtilDB.newUser("user");
-		UtilDB.test();
+		//UtilDB.test();
 	}
 
 	/**

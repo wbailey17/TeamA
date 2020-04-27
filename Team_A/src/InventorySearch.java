@@ -75,12 +75,12 @@ public class InventorySearch extends HttpServlet {
               		"</tr>");
         //TODO: change object to item
         for(Item item: resultList) {
-        	 out.println("<tr>\r\n" + 
-         	 		"    <td>"+ item.getName() + "</td>\n" + 
-         	 		"    <td>"+ item.getQuantity() + "</td>\n" + 
-         	 		"    <td>" + item.getStorage() + "</td>\n" + 
-         	 		"    <td>" + item.getCost() + "</td>\n" +
-         	 		"  </tr>");
+        	 out.printf("<tr>\r\n" + 
+          	 		"    <td>%s</td>\n" + 
+          	 		"    <td>%d</td>\n" + 
+          	 		"    <td>%s</td> \n" + 
+          	 		"    <td>%.2f</td>\n" + 
+          	 		"    </tr>",item.getName(), item.getQuantity(), item.getStorage(), item.getCost());
            }
         out.println("</table>");
         out.println("<a href=\\Team_A\\Home_Page.html>Home</a> <br>"); //TODO: update link

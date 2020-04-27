@@ -182,7 +182,7 @@ public class UtilDB {
 	   return user;
    }
    
-   public static Item updateItem(User user, String name, String newName, int cost, int number, String storage) {
+   public static Item updateItem(User user, String name, String newName, float cost, int number, String storage) {
 	   Session session = getSessionFactory().openSession();
 	   List<Item> temp = new ArrayList<>();
 	   Item item = null;
@@ -206,7 +206,7 @@ public class UtilDB {
 				}
 			}
 	  	   if(item != null) {
-	  		 if (cost != -1) {
+	  		 if (cost > 0) {
 					item.setCost(cost);
 				}
 				if (number != -1) {

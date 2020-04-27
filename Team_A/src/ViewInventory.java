@@ -67,12 +67,12 @@ public class ViewInventory extends HttpServlet {
         //TODO: change object to item
         if(!UtilDB.getInventory(user).isEmpty()) {
         	for(Item item: UtilDB.getInventory(user)) {
-        		out.println("<tr>\r\n" + 
-        			"    <td>"+ item.getName() + "</td>\n" + 
-        			"    <td>"+ item.getQuantity() + "</td>\n" + 
-         	 		"    <td>" + item.getStorage() + "</td>\n" + 
-         	 		"    <td>" + item.getCost() + "</td>\n" +
-         	 		"  </tr>");
+        		out.printf("<tr>\r\n" + 
+        			"    <td>%s</td>\n" + 
+        			"    <td>%d</td>\n" + 
+         	 		"    <td>%s</td>\n" + 
+         	 		"    <td>%.2f</td>\n" +
+         	 		"  </tr>",item.getName(), item.getQuantity(), item.getStorage(), item.getCost());
            }
         }
         out.println("</table>");

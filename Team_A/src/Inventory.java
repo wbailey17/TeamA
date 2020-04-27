@@ -97,10 +97,10 @@ public class Inventory {
 		}
 	}
 	
-	public int getCost(String item)
+	public float getCost(String item)
 	{
 		Item thing = searchForExactItem(item);
-		int cost = -1;
+		float cost = -1;
 		if(thing != null) {
 			cost = thing.getCost();
 		}

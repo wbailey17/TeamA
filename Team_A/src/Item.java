@@ -13,7 +13,7 @@ public class Item {
 	private String name;
 	
 	@Column(name = "cost")
-	private int cost;
+	private float cost;
 	
 	@Column(name = "quantity")
 	private int quantity;
@@ -25,7 +25,7 @@ public class Item {
 	@JoinColumn(name="inventory_id", nullable=false)
 	private Inventory inventory;
 	
-	public Item(Integer id, String name, int cost, int quantity, String storage) {
+	public Item(Integer id, String name, float cost, int quantity, String storage) {
 		this.id = id;
 		this.name = name;
 		this.cost = cost;
@@ -33,7 +33,7 @@ public class Item {
 		this.storage = storage;
 	}
 	
-	public Item(String name, int cost, int quantity, String storage) {
+	public Item(String name, float cost, int quantity, String storage) {
 		this.name = name;
 		this.cost = cost;
 		this.quantity = quantity;
@@ -64,10 +64,10 @@ public class Item {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getCost() {
+	public float getCost() {
 		return cost;
 	}
-	public void setCost(int cost) {
+	public void setCost(float cost) {
 		this.cost = cost;
 	}
 	public int getQuantity() {

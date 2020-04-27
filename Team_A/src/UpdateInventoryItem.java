@@ -30,14 +30,14 @@ public class UpdateInventoryItem extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Uncomment and remove last line
-		int cost;
+		float cost;
 		int quantity;
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		String itemName = request.getParameter("itemName");
 		String newName = request.getParameter("newName");
-		if(request.getParameter("cost").equals("") == false) {
-			cost = Integer.valueOf(request.getParameter("cost"));
+		if(!request.getParameter("cost").equals("")) {
+			cost = Float.valueOf(request.getParameter("cost"));
 		}
 		else {
 			cost = -1;
@@ -52,7 +52,7 @@ public class UpdateInventoryItem extends HttpServlet {
         updateItem(user, itemName, newName, cost, quantity, storage, response);
 	}
 	
-	void updateItem(User user, String itemName, String newName, int cost, int quantity, String storage, HttpServletResponse response) throws IOException {
+	void updateItem(User user, String itemName, String newName, float cost, int quantity, String storage, HttpServletResponse response) throws IOException {
 		//Inventory inventory = new Inventory(UtilDB.listInventory());
 		//Item item = inventory.updateItem(itemName, newName, cost, quantity, storage);
 		//Item item = user.getInventories().get(0).updateItem(itemName, newName, cost, quantity, storage);
@@ -62,7 +62,7 @@ public class UpdateInventoryItem extends HttpServlet {
 		String title = "Item Updated";
         String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + //
               "transitional//en\">\n"; //
-        out.println(docType + //
+        out.printf(docType + //
               "<html>\n" + //
               "<head>\n"
               + "<style>\n"
@@ -81,7 +81,7 @@ public class UpdateInventoryItem extends HttpServlet {
               "</header>"
               + "<title>" + title + "</title></head><br>\n" + //
               "<body>\n" + //
-              "<table style=\"width:100%\">\n" + 
+              "<table style=\"width:100%%\">\n" + 
               		"<tr style=\"background-color: #f0f0f0\">\n" + 
               		"<th>Item</th>\n" + 
               		"<th>Quantity</th>\n" + 
@@ -89,11 +89,11 @@ public class UpdateInventoryItem extends HttpServlet {
               		"<th>Cost</th>\n" +
               		"</tr>" +
               		"<tr>\r\n" + 
-         	 		"    <td>"+ item.getName() + "</td>\n" + 
-         	 		"    <td>"+ item.getQuantity() + "</td>\n" + 
-         	 		"    <td>" + item.getStorage() + "</td>\n" + 
-         	 		"    <td>" + item.getCost() + "</td>\n" +
-         	 		"  </tr>");
+         	 		"    <td>%s</td>\n" + 
+         	 		"    <td>%d</td>\n" + 
+         	 		"    <td>%s</td>\n" + 
+         	 		"    <td>%.2f</td>\n" + 
+         	 		"    </tr>",item.getName(), item.getQuantity(), item.getStorage(), item.getCost());
         			
         out.println("</table>");
         out.println("<a href=\\Team_A\\Home_Page.html>Home</a> <br>"); //TODO: update link
