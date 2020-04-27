@@ -30,9 +30,6 @@ public class User {
 		super();
 	}
 	
-	public Integer getID() {
-		return this.user_id;
-	}
 	public  List<Cart> getCarts() {
 		return this.carts;
 	}

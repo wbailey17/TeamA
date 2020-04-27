@@ -11,16 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class GetBudget
+ * Servlet implementation class AddExpense
  */
-@WebServlet("/GetBudget")
-public class GetBudget extends HttpServlet {
+@WebServlet("/AddExpense")
+public class AddExpense extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetBudget() {
+    public AddExpense() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,32 +33,28 @@ public class GetBudget extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user"); // get the user whom logged in
 		
+		String name = request.getParameter("name");
+		Double amount = Double.valueOf(request.getParameter("amount"));
+		
+		
 		response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 		String html = setupPage();
-		html += getBudget(user);
+		html += addExpense(user, name, amount);
 		html += "<a href=\\Team_A\\Home_Page.html>Home</a> <br>";
 		html += "</body></html>"; // end of body, html
 		out.println(html);
-		
 	}
 
-//	private void makeExpense(User user) {
-//		Budget budget = UtilDB.getBudget(user);
-//		Expense expense = new Expense("Rent", 515.0);
-//		UtilDB.addExpense(budget, expense);
-//		
-//	}
-	private String getBudget(User user) {
-		String html = "";
+	private String addExpense(User user, String name, Double amount) {
 		Budget budget = UtilDB.getBudget(user);
-		html += String.format("<p> Budget: %s, Income: %.2f</p>",budget.getName(), budget.getIncome());
-		for( Expense expense: UtilDB.getExpenses(budget)) {
-			html += String.format("<p>Expense: %s, Amount: %.2f</p>", expense.getName(), expense.getAmount());
-		}
+		String html = "";
+		UtilDB.addExpense(budget,new Expense(name,amount));
+		
+		html += String.format("<h2>Expense added to: Budget %s </h2>", budget.getName() );
+		html += String.format("%s , %.2f", name, amount);
 		return html;
 	}
-
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

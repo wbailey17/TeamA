@@ -329,14 +329,14 @@ public class UtilDB {
 	   Transaction tx = null;
 	   User user = new User(username);
 	   Inventory in = new Inventory("inventory");
-	   Budget b =  new Budget("Budget 1", 1000.0);
+	   //Budget b =  new Budget("Budget 1", 1000.0);
 	   in.setUser(user);
-	   b.setUser(user);
+	  // b.setUser(user);
 	   try {
 		   tx = session.beginTransaction();
 		   session.save(user);
 		   session.save(in);
-		   session.save(b);
+		  // session.save(b);
 		   tx.commit();
 	   } catch (HibernateException e) {
 		   if (tx != null)
@@ -393,6 +393,9 @@ public class UtilDB {
 		   SQLQuery q = session.createSQLQuery(tsql);
 		   q.addEntity(Budget.class);
 		   q.setParameter("id", user.getId());
+		   if( q.list().isEmpty()) { // if there is no Budget attached to the user than return nothing
+			   return null;
+		   }
 		   budget = (Budget) q.list().get(0);
 		   tx.commit();
 	   } catch (HibernateException e) {
@@ -405,6 +408,32 @@ public class UtilDB {
 	   return budget;
    }
    
+   public static Budget createBudget(User user, Budget budget) {
+	   Session session = getSessionFactory().openSession();
+	   Transaction tx = null;
+	   User u = null;
+		   try {
+			   tx = session.beginTransaction();
+//			   String tsql = "SELECT * FROM User WHERE user_id = :id";
+//			   SQLQuery query = session.createSQLQuery(tsql);
+//			   query.addEntity(User.class);
+//			   query.setParameter("user_id", user.getId());
+//			   u = (User) query.list().get(0);
+			   user.setBudget(budget);
+			   budget.setUser(user);
+			   session.save(user);
+			   session.save(budget);
+			   tx.commit();
+		   } catch (HibernateException e) {
+			   if (tx != null)
+				   tx.rollback();
+			   e.printStackTrace();
+		   } finally {
+			   session.close();
+		   }
+
+	   return budget;
+   }
    public static List<Expense> getExpenses(Budget budget){
 	   Session session = getSessionFactory().openSession();
 	   Transaction tx = null;
