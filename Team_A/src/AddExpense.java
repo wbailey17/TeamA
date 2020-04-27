@@ -30,11 +30,17 @@ public class AddExpense extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		Double amount;
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user"); // get the user whom logged in
 		
 		String name = request.getParameter("name");
-		Double amount = Double.valueOf(request.getParameter("amount"));
+		if(!request.getParameter("amount").equals("")) {
+			amount = Double.valueOf(request.getParameter("amount"));
+		}
+		else {
+			amount = -1.0;
+		}
 		
 		
 		response.setContentType("text/html");

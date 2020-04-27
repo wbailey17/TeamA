@@ -30,11 +30,23 @@ public class AddInventory extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Uncomment and remove last line
+		float cost;
+		int quantity;
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		String name = request.getParameter("name");
-		float cost = Float.valueOf(request.getParameter("cost"));
-		int quantity = Integer.valueOf(request.getParameter("quantity"));
+		if(!request.getParameter("cost").equals("")) {
+			cost = Float.valueOf(request.getParameter("cost"));
+		}
+		else {
+			cost = -1;
+		}
+		if(request.getParameter("quantity").equals("") == false) {
+			quantity = Integer.valueOf(request.getParameter("quantity"));
+		}
+		else {
+			quantity = -1;
+		}
 		String storage = request.getParameter("storage");
         addItem(user, name, cost, quantity, storage, response);
 		//addItem("milk", 1, 1, "fridge", response);

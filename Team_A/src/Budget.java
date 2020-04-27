@@ -101,7 +101,7 @@ public class Budget {
 	
 	public Expense searchForExpense(String expense) {
 		for(Expense e: this.getExpenses()) {
-			if(expense.equalsIgnoreCase(e.getName()))
+			if(expense.equals(e.getName()))
 			{
 				return e;
 			}
