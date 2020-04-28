@@ -236,7 +236,7 @@ public class UtilDB {
 		   query.addEntity(User.class); // maps to User Entity
 		   query.setParameter("user", username);  
 		   List users = query.list();
-		   if(users == null) {
+		   if(users.isEmpty()) {
 			   User user = new User(username);
 			   Inventory in = new Inventory("inventory");
 			   //Budget b =  new Budget("Budget 1", 1000.0);
