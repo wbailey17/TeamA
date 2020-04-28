@@ -53,12 +53,33 @@ public class GetBudget extends HttpServlet {
 		String html = "";
 		Budget budget = UtilDB.getBudget(user);
 		html += String.format("<p> Budget: %s, Income: %.2f</p>",budget.getName(), budget.getIncome());
+		html += "<table style=\\\"width:100%\\\">";
+		html += "<tr style=\\\"background-color: #f0f0f0\\\">";
+		html += "<th>Expense Name </th> <th>Expense Amount</th></tr>";
 		for( Expense expense: UtilDB.getExpenses(budget)) {
-			html += String.format("<p>Expense: %s, Amount: %.2f</p>", expense.getName(), expense.getAmount());
+			html += "<tr>";
+			html += String.format("<td>%s</td> <td> %.2f</td>", expense.getName(), expense.getAmount());
+			html += "</tr>";
 		}
+		html += "</table>";
+		html += String.format("<p>Total Expense: %.2f</p>", getTotalExpense(user));
+		html += String.format("<p>Remaining Income: %.2f</p>", getRemainingIncome(user));
 		return html;
 	}
 
+	private Double getTotalExpense(User user) {
+		Budget budget = UtilDB.getBudget(user);
+		Double total = 0.0;
+		for (Expense expense: UtilDB.getExpenses(budget)) {
+			total += expense.getAmount();
+		}
+		return total;
+	}
+	
+	private Double getRemainingIncome(User user) {
+		Budget budget = UtilDB.getBudget(user);
+		return budget.getIncome() - getTotalExpense(user);
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

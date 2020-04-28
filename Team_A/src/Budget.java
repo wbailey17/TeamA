@@ -108,4 +108,16 @@ public class Budget {
 		}
 		return null;
 	}
+	
+//	public Double getTotalExpense() {
+//		Double total = 0.0;
+//		for(Expense e: expenses) {
+//			total += e.getAmount();
+//		}
+//		return total;
+//	}
+//	
+//	public Double getRemainingIncome() {
+//		return this.getIncome() - this.getTotalExpense(); 
+//	}
 }
