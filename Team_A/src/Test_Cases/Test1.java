@@ -467,6 +467,318 @@ public class Test1 {
       verificationErrors.append(e.toString());
     }
   }
+  
+  @Test
+  public void testDuplicateItem() throws Exception {
+    driver.get("http://ec2-3-17-56-105.us-east-2.compute.amazonaws.com:8080/Team_A/User_Login.html");
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("testuser");
+    driver.findElement(By.name("name")).sendKeys(Keys.ENTER);
+    driver.findElement(By.linkText("Add Item")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("Apples");
+    driver.findElement(By.name("quantity")).click();
+    driver.findElement(By.name("quantity")).clear();
+    driver.findElement(By.name("quantity")).sendKeys("5");
+    driver.findElement(By.name("storage")).click();
+    driver.findElement(By.name("storage")).clear();
+    driver.findElement(By.name("storage")).sendKeys("Pantry");
+    driver.findElement(By.name("cost")).click();
+    driver.findElement(By.name("cost")).clear();
+    driver.findElement(By.name("cost")).sendKeys("3.00");
+    driver.findElement(By.xpath("//input[@value='Add']")).click();
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Add Item")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("Apples");
+    driver.findElement(By.name("quantity")).click();
+    driver.findElement(By.name("quantity")).clear();
+    driver.findElement(By.name("quantity")).sendKeys("6");
+    driver.findElement(By.name("storage")).click();
+    driver.findElement(By.name("storage")).clear();
+    driver.findElement(By.name("storage")).sendKeys("Pantry");
+    driver.findElement(By.name("cost")).click();
+    driver.findElement(By.name("cost")).clear();
+    driver.findElement(By.name("cost")).sendKeys("5");
+    driver.findElement(By.xpath("//input[@value='Add']")).click();
+    try {
+      assertEquals("Item Already Exists", driver.findElement(By.xpath("//h2")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Remove Item")).click();
+    driver.findElement(By.name("item")).click();
+    driver.findElement(By.name("item")).clear();
+    driver.findElement(By.name("item")).sendKeys("Apples");
+    driver.findElement(By.xpath("//input[@value='Remove']")).click();
+  }
+  
+  @Test
+  public void testAddExpense() throws Exception {
+    driver.get("http://ec2-3-17-56-105.us-east-2.compute.amazonaws.com:8080/Team_A/User_Login.html");
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("testuser");
+    driver.findElement(By.name("name")).sendKeys(Keys.ENTER);
+    driver.findElement(By.linkText("Add Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("test");
+    driver.findElement(By.xpath("//form[@action='AddExpense']")).click();
+    driver.findElement(By.name("amount")).click();
+    driver.findElement(By.name("amount")).clear();
+    driver.findElement(By.name("amount")).sendKeys("1000");
+    driver.findElement(By.xpath("//input[@value='create']")).click();
+    try {
+      assertEquals("test , 1000.00", driver.findElement(By.xpath("//p")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Remove Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("test");
+    driver.findElement(By.xpath("//input[@value='Remove']")).click();
+  }
+  
+  @Test
+  public void testUpdateExpense() throws Exception {
+    driver.get("http://ec2-3-17-56-105.us-east-2.compute.amazonaws.com:8080/Team_A/User_Login.html");
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("testuser");
+    driver.findElement(By.xpath("//input[@value='Login']")).click();
+    driver.findElement(By.linkText("Add Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("test1");
+    driver.findElement(By.name("amount")).click();
+    driver.findElement(By.name("amount")).clear();
+    driver.findElement(By.name("amount")).sendKeys("40.00");
+    driver.findElement(By.xpath("//input[@value='create']")).click();
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Update Expense")).click();
+    driver.findElement(By.name("expenseName")).click();
+    driver.findElement(By.name("expenseName")).clear();
+    driver.findElement(By.name("expenseName")).sendKeys("test1");
+    driver.findElement(By.name("newName")).click();
+    driver.findElement(By.name("newName")).clear();
+    driver.findElement(By.name("newName")).sendKeys("test2");
+    driver.findElement(By.name("amount")).click();
+    driver.findElement(By.name("amount")).clear();
+    driver.findElement(By.name("amount")).sendKeys("100");
+    driver.findElement(By.xpath("//input[@value='Update']")).click();
+    try {
+      assertEquals("test2 , 100.00", driver.findElement(By.xpath("//p")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("View Budget")).click();
+    try {
+      assertEquals("test2", driver.findElement(By.xpath("//td")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("100.00", driver.findElement(By.xpath("//td[2]")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Remove Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("test2");
+    driver.findElement(By.xpath("//input[@value='Remove']")).click();
+  }
+  
+  @Test
+  public void testRemoveExpense() throws Exception {
+    driver.get("http://ec2-3-17-56-105.us-east-2.compute.amazonaws.com:8080/Team_A/User_Login.html");
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("testuser");
+    driver.findElement(By.xpath("//input[@value='Login']")).click();
+    driver.findElement(By.linkText("Add Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("test1");
+    driver.findElement(By.name("amount")).click();
+    driver.findElement(By.name("amount")).clear();
+    driver.findElement(By.name("amount")).sendKeys("1000");
+    driver.findElement(By.xpath("//input[@value='create']")).click();
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Add Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("test2");
+    driver.findElement(By.name("amount")).click();
+    driver.findElement(By.name("amount")).clear();
+    driver.findElement(By.name("amount")).sendKeys("10.0");
+    driver.findElement(By.xpath("//input[@value='create']")).click();
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Add Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("Expense3");
+    driver.findElement(By.name("amount")).click();
+    driver.findElement(By.name("amount")).clear();
+    driver.findElement(By.name("amount")).sendKeys("200");
+    driver.findElement(By.xpath("//input[@value='create']")).click();
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Remove Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("test2");
+    driver.findElement(By.xpath("//input[@value='Remove']")).click();
+    try {
+      assertEquals("test2 , 10.00", driver.findElement(By.xpath("//p")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("View Budget")).click();
+    try {
+      assertEquals("test1", driver.findElement(By.xpath("//td")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("1000.00", driver.findElement(By.xpath("//td[2]")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Expense3", driver.findElement(By.xpath("//tr[3]/td")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("200.00", driver.findElement(By.xpath("//tr[3]/td[2]")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Remove Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("test1");
+    driver.findElement(By.xpath("//input[@value='Remove']")).click();
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Remove Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("Expense3");
+    driver.findElement(By.xpath("//input[@value='Remove']")).click();
+    driver.findElement(By.linkText("Home")).click();
+  }
+  
+  @Test
+  public void testViewBudget() throws Exception {
+    driver.get("http://ec2-3-17-56-105.us-east-2.compute.amazonaws.com:8080/Team_A/User_Login.html");
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("testuser");
+    driver.findElement(By.name("name")).sendKeys(Keys.ENTER);
+    driver.findElement(By.linkText("Add Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("Expense1");
+    driver.findElement(By.name("amount")).click();
+    driver.findElement(By.name("amount")).clear();
+    driver.findElement(By.name("amount")).sendKeys("10");
+    driver.findElement(By.xpath("//input[@value='create']")).click();
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Add Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("Expense2");
+    driver.findElement(By.name("amount")).click();
+    driver.findElement(By.name("amount")).clear();
+    driver.findElement(By.name("amount")).sendKeys("72.33");
+    driver.findElement(By.xpath("//input[@value='create']")).click();
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Add Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("Expense3");
+    driver.findElement(By.name("amount")).click();
+    driver.findElement(By.name("amount")).clear();
+    driver.findElement(By.name("amount")).sendKeys("4200.01");
+    driver.findElement(By.xpath("//input[@value='create']")).click();
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("View Budget")).click();
+    try {
+      assertEquals("Budget", driver.findElement(By.xpath("//h1")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Budget: Test User, Income: 10000.00", driver.findElement(By.xpath("//p")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Expense1", driver.findElement(By.xpath("//td")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("10.00", driver.findElement(By.xpath("//td[2]")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("72.33", driver.findElement(By.xpath("//tr[3]/td[2]")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Expense3", driver.findElement(By.xpath("//tr[4]/td")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("4200.01", driver.findElement(By.xpath("//tr[4]/td[2]")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Total Expense: 4282.34", driver.findElement(By.xpath("//p[2]")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    try {
+      assertEquals("Remaining Income: 5717.66", driver.findElement(By.xpath("//p[3]")).getText());
+    } catch (Error e) {
+      verificationErrors.append(e.toString());
+    }
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Remove Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("Expense1");
+    driver.findElement(By.name("name")).sendKeys(Keys.ENTER);
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Remove Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("Expense2");
+    driver.findElement(By.xpath("//input[@value='Remove']")).click();
+    driver.findElement(By.linkText("Home")).click();
+    driver.findElement(By.linkText("Remove Expense")).click();
+    driver.findElement(By.name("name")).click();
+    driver.findElement(By.name("name")).clear();
+    driver.findElement(By.name("name")).sendKeys("Expense3");
+    driver.findElement(By.xpath("//input[@value='Remove']")).click();
+    driver.findElement(By.linkText("Home")).click();
+  }
 
   @After
   public void tearDown() throws Exception {

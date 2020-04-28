@@ -47,18 +47,25 @@ public class AddExpense extends HttpServlet {
         PrintWriter out = response.getWriter();
 		String html = setupPage();
 		html += addExpense(user, name, amount);
-		html += "<a href=\\Team_A\\Home_Page.html>Home</a> <br>";
-		html += "</body></html>"; // end of body, html
-		out.println(html);
+		if(html.equals(setupPage())){
+			response.sendRedirect("/Team_A/Create_budget.html");
+		}
+		else {
+			html += "<a href=\\Team_A\\Home_Page.html>Home</a> <br>";
+			html += "</body></html>"; // end of body, html
+			out.println(html);
+		}
 	}
 
 	private String addExpense(User user, String name, Double amount) {
 		Budget budget = UtilDB.getBudget(user);
 		String html = "";
-		UtilDB.addExpense(budget,new Expense(name,amount));
-		
-		html += String.format("<h2>Expense added to: Budget %s </h2>", budget.getName() );
-		html += String.format("%s , %.2f", name, amount);
+		if(budget != null) {
+			UtilDB.addExpense(budget,new Expense(name,amount));
+			
+			html += String.format("<h2>Expense added to: Budget %s </h2>", budget.getName() );
+			html += String.format("<p>%s , %.2f</p>\n", name, amount);
+		}
 		return html;
 	}
 	/**

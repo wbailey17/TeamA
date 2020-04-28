@@ -37,9 +37,14 @@ public class GetBudget extends HttpServlet {
         PrintWriter out = response.getWriter();
 		String html = setupPage();
 		html += getBudget(user);
-		html += "<a href=\\Team_A\\Home_Page.html>Home</a> <br>";
-		html += "</body></html>"; // end of body, html
-		out.println(html);
+		if(html.equals(setupPage())) {
+			response.sendRedirect("/Team_A/Create_budget.html");
+		}
+		else {
+			html += "<a href=\\Team_A\\Home_Page.html>Home</a> <br>";
+			html += "</body></html>"; // end of body, html
+			out.println(html);
+		}
 		
 	}
 
@@ -52,18 +57,20 @@ public class GetBudget extends HttpServlet {
 	private String getBudget(User user) {
 		String html = "";
 		Budget budget = UtilDB.getBudget(user);
-		html += String.format("<p> Budget: %s, Income: %.2f</p>",budget.getName(), budget.getIncome());
-		html += "<table style=\\\"width:100%\\\">";
-		html += "<tr style=\\\"background-color: #f0f0f0\\\">";
-		html += "<th>Expense Name </th> <th>Expense Amount</th></tr>";
-		for( Expense expense: UtilDB.getExpenses(budget)) {
-			html += "<tr>";
-			html += String.format("<td>%s</td> <td> %.2f</td>", expense.getName(), expense.getAmount());
-			html += "</tr>";
+		if(budget != null) {
+			html += String.format("<p> Budget: %s, Income: %.2f</p>",budget.getName(), budget.getIncome());
+			html += "<table style=\\\"width:100%\\\">";
+			html += "<tr style=\\\"background-color: #f0f0f0\\\">";
+			html += "<th>Expense Name </th> <th>Expense Amount</th></tr>";
+			for( Expense expense: UtilDB.getExpenses(budget)) {
+				html += "<tr>";
+				html += String.format("<td>%s</td> <td> %.2f</td>", expense.getName(), expense.getAmount());
+				html += "</tr>";
+			}
+			html += "</table>";
+			html += String.format("<p>Total Expense: %.2f</p>", getTotalExpense(user));
+			html += String.format("<p>Remaining Income: %.2f</p>", getRemainingIncome(user));
 		}
-		html += "</table>";
-		html += String.format("<p>Total Expense: %.2f</p>", getTotalExpense(user));
-		html += String.format("<p>Remaining Income: %.2f</p>", getRemainingIncome(user));
 		return html;
 	}
 

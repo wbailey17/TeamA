@@ -178,12 +178,14 @@ public class UtilDB {
 		   tx = session.beginTransaction();
 		   session.saveOrUpdate(user.getInventories().get(0));
 		   item = user.getInventories().get(0).removeItem(name);
-		   String tsql = "DELETE FROM Item WHERE inventory_id = :id and name = :name";
-		   SQLQuery q = session.createSQLQuery(tsql);
-		   q.addEntity(Item.class);
-		   q.setParameter("id", user.getInventories().get(0).getId());
-		   q.setParameter("name", item.getName());
-		   q.executeUpdate();
+		   if(item != null) {
+			   String tsql = "DELETE FROM Item WHERE inventory_id = :id and name = :name";
+			   SQLQuery q = session.createSQLQuery(tsql);
+			   q.addEntity(Item.class);
+			   q.setParameter("id", user.getInventories().get(0).getId());
+			   q.setParameter("name", item.getName());
+			   q.executeUpdate();
+		   }
 		   tx.commit();
 	   } catch (HibernateException e) {
 		   if (tx != null)
@@ -303,10 +305,9 @@ public class UtilDB {
 		   SQLQuery q = session.createSQLQuery(tsql);
 		   q.addEntity(Budget.class);
 		   q.setParameter("id", user.getId());
-		   if( q.list().isEmpty()) { // if there is no Budget attached to the user than return nothing
-			   return null;
+		   if(!q.list().isEmpty()) { // if there is no Budget attached to the user than return nothing
+			   budget = (Budget) q.list().get(0);
 		   }
-		   budget = (Budget) q.list().get(0);
 		   tx.commit();
 	   } catch (HibernateException e) {
 		   if (tx != null)
@@ -354,8 +355,9 @@ public class UtilDB {
 		   SQLQuery q = session.createSQLQuery(tsql);
 		   q.addEntity(Expense.class);
 		   q.setParameter("id", budget.getID());
-		   expenses = q.list();
-		   
+		   if(!q.list().isEmpty()) {
+			   expenses = q.list();
+		   }
 		   tx.commit();
 	   } catch (HibernateException e) {
 		   if (tx != null)
@@ -376,11 +378,13 @@ public class UtilDB {
 		   SQLQuery q = session.createSQLQuery(tsql);
 		   q.addEntity(Budget.class);
 		   q.setParameter("id", budget.getID());
-		   Budget b = (Budget) q.list().get(0);
-		   b.addExpense(expense);
-		   expense.setBudget(b);
-		   session.save(b);
-		   session.save(expense);
+		   if(!q.list().isEmpty()) {
+			   Budget b = (Budget) q.list().get(0);
+			   b.addExpense(expense);
+			   expense.setBudget(b);
+			   session.save(b);
+			   session.save(expense);
+		   }
 		   tx.commit();
 	   } catch (HibernateException e) {
 		   if (tx != null)
@@ -408,12 +412,14 @@ public class UtilDB {
 		   session.save(expense);*/
 		   session.saveOrUpdate(budget);
 		   temp = budget.removeExpense(name);
-		   String tsql = "DELETE FROM Expense WHERE budget_id = :id and name = :name";
-		   SQLQuery q = session.createSQLQuery(tsql);
-		   q.addEntity(Expense.class);
-		   q.setParameter("id", budget.getID());
-		   q.setParameter("name", temp.getName());
-		   q.executeUpdate();
+		   if(temp != null) {
+			   String tsql = "DELETE FROM Expense WHERE budget_id = :id and name = :name";
+			   SQLQuery q = session.createSQLQuery(tsql);
+			   q.addEntity(Expense.class);
+			   q.setParameter("id", budget.getID());
+			   q.setParameter("name", temp.getName());
+			   q.executeUpdate();
+		   }
 		   tx.commit();
 	   } catch (HibernateException e) {
 		   if (tx != null)
